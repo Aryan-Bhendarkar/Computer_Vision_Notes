@@ -58,7 +58,9 @@ nav.tabs button .due{margin-left:auto;font-family:var(--fm);font-size:10.5px;bac
 .tocitem:hover{background:var(--sunk);color:var(--ink)}
 .tocitem[aria-current="true"]{background:var(--sunk);color:var(--ink);font-weight:600;box-shadow:inset 2px 0 0 var(--accent)}
 .tocitem .num{font-family:var(--fm);font-size:11px;color:var(--ink-3);min-width:30px;font-variant-numeric:tabular-nums}
-.tocitem .dot{margin-left:auto;width:7px;height:7px;border-radius:50%;flex:none;align-self:center}
+.tocitem .stat{margin-left:auto;display:flex;align-items:center;gap:5px;flex:none}
+.tocitem .pct{font-family:var(--fm);font-size:10px;font-weight:600;font-variant-numeric:tabular-nums}
+.tocitem .dot{width:7px;height:7px;border-radius:50%;flex:none;align-self:center}
 .railfoot{padding:10px 14px;border-top:1px solid var(--rule);display:flex;gap:10px;align-items:center;font-family:var(--fm);font-size:10.5px;color:var(--ink-3)}
 .railfoot button{color:var(--ink-3)}
 .railfoot button:hover{color:var(--ink)}
@@ -128,24 +130,17 @@ textarea.free{width:100%;min-height:104px;margin-top:16px;padding:12px 14px;font
 .empty{text-align:center;padding:70px 20px;color:var(--ink-3)}
 .empty strong{display:block;font-family:var(--fs);font-size:19px;color:var(--ink);margin-bottom:8px;font-weight:600}
 
-/* ---------- resume / pacing ---------- */
+/* ---------- resume ---------- */
 .now{border:1px solid var(--rule);border-radius:6px;background:var(--panel);padding:18px 22px;margin-bottom:22px}
 .now h2{margin:0 0 10px;font-family:var(--fm);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
 .now-row{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
 .now-headline{font-family:var(--fr);font-size:17px;flex:1;min-width:220px;color:var(--ink)}
 .now-headline b{color:var(--accent-ink)}
 .now .go{font-family:var(--fs);font-size:13px;font-weight:600;padding:9px 16px;border-radius:3px;background:var(--accent);color:var(--on-accent);white-space:nowrap}
-.cols2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:26px}
-@media(max-width:880px){.cols2{grid-template-columns:1fr}}
 .panel{border:1px solid var(--rule);border-radius:6px;background:var(--panel);padding:16px 18px}
 .panel h2{margin:0 0 10px;font-family:var(--fm);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
 .panel .lead{font-family:var(--fs);font-size:13px;color:var(--ink-2);line-height:1.55;margin:0 0 10px}
 .panel .lead b{color:var(--accent-ink);font-variant-numeric:tabular-nums}
-.pslider{display:block;font-family:var(--fs);font-size:12.5px;color:var(--ink-2);margin:4px 0}
-.pslider input{width:100%;accent-color:var(--accent);margin:8px 0 2px;display:block}
-.pslider b{color:var(--ink)}
-.pproj{font-family:var(--fs);font-size:13px;color:var(--ink);line-height:1.5;margin:8px 0 0}
-.pproj b{color:var(--accent-ink)}
 
 /* ---------- map ---------- */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin-bottom:30px}
@@ -184,11 +179,11 @@ h3.sec{font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:u
 #hlbar{position:fixed;z-index:80;display:none;gap:4px;background:var(--panel);border:1px solid var(--rule-2);
   border-radius:9px;padding:5px;box-shadow:0 10px 30px -12px rgba(0,0,0,.4)}
 #hlbar.on{display:flex}
-.sw{width:25px;height:25px;border-radius:6px;border:1px solid var(--rule-2);cursor:pointer;padding:0;
+.hlsw{width:25px;height:25px;border-radius:6px;border:1px solid var(--rule-2);cursor:pointer;padding:0;
   font-family:var(--fm);font-size:10px;font-weight:700;color:#20180a;display:grid;place-items:center}
-.sw[data-c="1"]{background:var(--hl-1)} .sw[data-c="2"]{background:var(--hl-2)}
-.sw[data-c="3"]{background:var(--hl-3)} .sw[data-c="4"]{background:var(--hl-4)}
-.sw[data-c="0"]{background:var(--sunk);color:var(--ink-2)}
+.hlsw[data-c="1"]{background:var(--hl-1)} .hlsw[data-c="2"]{background:var(--hl-2)}
+.hlsw[data-c="3"]{background:var(--hl-3)} .hlsw[data-c="4"]{background:var(--hl-4)}
+.hlsw[data-c="0"]{background:var(--sunk);color:var(--ink-2)}
 
 /* ---------- focus mode ---------- */
 body.focus #rail{opacity:.08;pointer-events:none;transition:opacity .2s}
@@ -234,11 +229,11 @@ mjx-container[display="true"]{margin:14px 0!important}
   </main>
 </div>
 <div id="hlbar" role="toolbar" aria-label="Highlight colour">
-  <button class="sw" data-c="1" title="Remember this (1)">1</button>
-  <button class="sw" data-c="2" title="Understood (2)">2</button>
-  <button class="sw" data-c="3" title="Weak spot — revisit (3)">3</button>
-  <button class="sw" data-c="4" title="Interview material (4)">4</button>
-  <button class="sw" data-c="0" title="Remove highlight (0)">✕</button>
+  <button class="hlsw" data-c="1" title="Remember this (1)">1</button>
+  <button class="hlsw" data-c="2" title="Understood (2)">2</button>
+  <button class="hlsw" data-c="3" title="Weak spot — revisit (3)">3</button>
+  <button class="hlsw" data-c="4" title="Interview material (4)">4</button>
+  <button class="hlsw" data-c="0" title="Remove highlight (0)">✕</button>
 </div>
 
 <script id="content" type="application/json">__CONTENT__</script>
@@ -455,7 +450,7 @@ document.addEventListener('mousedown',e=>{
   if(!e.target.closest('#hlbar')) document.getElementById('hlbar').classList.remove('on');
 });
 document.getElementById('hlbar').addEventListener('click',e=>{
-  const sw=e.target.closest('.sw'); if(!sw) return;
+  const sw=e.target.closest('.hlsw'); if(!sw) return;
   const c=sw.dataset.c;
   if(c==='0'){
     const hl=getSelection().anchorNode?.parentElement?.closest('.hl');
@@ -488,9 +483,9 @@ function strength(cid){
   const cards=BYID[cid].cards; if(!cards.length) return null;
   const n=Date.now(); let tot=0,k=0;
   for(const c of cards){const s=STATE.cards[c.id];
-    if(!s||!s.S){tot+=0;k++;continue;}
+    if(!s||!s.S) continue;              // never graded -- excluded, not 0%
     tot+=retriev(Math.max(0,(n-s.last)/DAY),s.S);k++;}
-  return k?tot/k:null;
+  return k?tot/k:null;                  // null = untouched, band 0 (grey)
 }
 const band=r=>r===null||r===0?0:r<0.6?1:r<0.8?2:r<0.93?3:4;
 const bandColor=b=>['var(--r0)','var(--r1)','var(--r2)','var(--r3)','var(--r4)'][b];
@@ -511,10 +506,13 @@ function renderToc(){
     anyHit=anyHit||cs.length>0;
     h+=`<div class="mod"><h2>M${m} · ${all[0].moduleName}</h2>`;
     for(const c of cs){
-      const b=band(strength(c.id));
-      h+=`<button class="tocitem" data-go="${c.id}" aria-current="${TAB==='read'&&CUR===c.id}">
+      const s=strength(c.id), b=band(s);
+      const pctTxt = s===null ? '' : Math.round(s*100)+'%';
+      h+=`<button class="tocitem" data-go="${c.id}" aria-current="${TAB==='read'&&CUR===c.id}"
+          title="${s===null?'Untouched':Math.round(s*100)+'% retrievability'}">
         <span class="num">${c.id}</span><span>${c.title}</span>
-        <span class="dot" style="background:${bandColor(b)}"></span></button>`;
+        <span class="stat">${pctTxt?`<span class="pct" style="color:${bandColor(b)}">${pctTxt}</span>`:''}
+        <span class="dot" style="background:${bandColor(b)}"></span></span></button>`;
     }
     h+='</div>';
   }
@@ -554,9 +552,11 @@ function renderRead(){
       <div class="va" hidden>${md(k.a)}</div>
       <button class="reveal">Reveal — after you've predicted</button></div>`;
   });
+  const cs=strength(c.id), cb=band(cs);
   el.innerHTML=`<div class="chead">
       <div class="eyebrow"><span>Module ${c.module} · ${c.moduleName}</span>
         ${c.priority!=='standard'?`<span class="tag ${c.priority}">${c.priority}</span>`:''}
+        ${cs!==null?`<span class="tag" style="background:${bandColor(cb)};color:${cb<2?'var(--ink-2)':'var(--on-accent)'}">${Math.round(cs*100)}% retrievability</span>`:''}
         <span style="margin-left:auto">${c.cards.length} card${c.cards.length===1?'':'s'}</span></div>
       <h2>${c.id} &nbsp;${c.title}</h2></div>
     <div class="prose">${html}</div>
@@ -679,24 +679,6 @@ function renderResume(){
     <button class="go" id="resumego">${seenAny?'Resume':'Open'} →</button>
   </div></div>`;
 }
-function renderPacing(){
-  const words=DATA.stats.wordCount||0;
-  const firstH=words/140/60, fullH=firstH*1.8;
-  const seen=CARDS.filter(c=>STATE.cards[c.id]).length;
-  const doneFrac=CARDS.length?seen/CARDS.length:0;
-  const hpw=STATE.hpw||6;
-  const fmtH=h=>h>=1?Math.round(h)+' h':Math.round(h*60)+' min';
-  const remFull=fullH*(1-doneFrac);
-  const wk=remFull/hpw;
-  const date=new Date(Date.now()+wk*7*DAY).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
-  return `<div class="panel"><h2>Pacing</h2>
-    <p class="lead">The whole set of notes is roughly <b>${fmtH(firstH)}</b> of first-pass reading at 140&nbsp;wpm, about <b>${fmtH(fullH)}</b> including spaced practice.</p>
-    <label class="pslider">I can study
-      <input type="range" id="hpw" min="2" max="20" step="1" value="${hpw}">
-      <b><span id="hpwv">${hpw}</span> h / week</b></label>
-    <p class="pproj" id="pproj">At this pace: full mastery around <b>${date}</b> (~${Math.max(1,Math.ceil(wk))} weeks from today).</p>
-  </div>`;
-}
 function renderMap(){
   const n=Date.now();
   const seen=CARDS.filter(c=>STATE.cards[c.id]).length;
@@ -705,9 +687,9 @@ function renderMap(){
   const builds=CONCEPTS.filter(c=>c.build);
   const bdone=builds.filter(c=>STATE.builds[c.id]).length;
   let h=renderResume();
-  h+=`<div class="cols2">${renderPacing()}<div class="panel"><h2>Reading guide</h2>
+  h+=`<div class="panel" style="margin-bottom:26px"><h2>Reading guide</h2>
     <p class="lead" style="margin-bottom:0">First pass — read a concept linearly, predict the Pause before revealing.
-    Second pass — work every derivation on paper. Before an interview — the Top-1% distinction call-outs and the Build tasks.</p></div></div>`;
+    Second pass — work every derivation on paper. Before an interview — the Top-1% distinction call-outs and the Build tasks.</p></div>`;
   h+=`<div class="stats">
     <div class="stat"><div class="v">${dueCount()}</div><div class="l">due now</div></div>
     <div class="stat"><div class="v">${seen}<span style="font-size:15px;color:var(--ink-3)">/${CARDS.length}</span></div><div class="l">cards started</div></div>
@@ -715,7 +697,7 @@ function renderMap(){
     <div class="stat"><div class="v" style="color:${critWeak?'var(--bad)':'inherit'}">${critWeak}<span style="font-size:15px;color:var(--ink-3)">/${DATA.stats.critical}</span></div><div class="l">critical weak</div></div>
     <div class="stat"><div class="v">${bdone}<span style="font-size:15px;color:var(--ink-3)">/${builds.length}</span></div><div class="l">builds done</div></div>
   </div>
-  <p style="color:var(--ink-2);max-width:62ch;margin:0 0 6px">Colour is <b>retrieval strength</b> — the FSRS model's estimate that you could recall this concept right now — not whether you have read it. A concept read three weeks ago and never recalled is grey, and that is the point.</p>
+  <p style="color:var(--ink-2);max-width:62ch;margin:0 0 6px">Colour — and, once a concept has been practiced, the number in each cell — is <b>retrieval strength</b>: the FSRS model's estimate (as a %) that you could recall this concept right now, not whether you have read it. A concept read three weeks ago and never recalled is grey, and that is the point.</p>
   <div class="legend">
     <span class="sw"><i style="background:var(--r0)"></i>untouched</span>
     <span class="sw"><i style="background:var(--r1)"></i>&lt;60%</span>
@@ -727,10 +709,12 @@ function renderMap(){
   for(let m=1;m<=6;m++){
     const cs=CONCEPTS.filter(c=>c.module===m); if(!cs.length)continue;
     h+=`<div class="maprow"><div class="name"><b>Module ${m}</b>${cs[0].moduleName}</div><div class="cells">`;
-    for(const c of cs){const b=band(strength(c.id));
+    for(const c of cs){const s=strength(c.id),b=band(s);
+      const label = s===null ? c.id.split('.')[1] : Math.round(s*100);
+      const tt = s===null ? `${c.id} ${c.title.replace(/"/g,'')} — untouched` : `${c.id} ${c.title.replace(/"/g,'')} — ${Math.round(s*100)}% retrievability`;
       h+=`<button class="cell ${c.priority==='critical'?'crit':''}" data-go="${c.id}"
         style="background:${bandColor(b)};color:${b<2?'var(--ink-2)':'var(--on-accent)'}"
-        title="${c.id} ${c.title.replace(/"/g,'')}">${c.id.split('.')[1]}</button>`;}
+        title="${tt}">${label}</button>`;}
     h+=`</div></div>`;
   }
   const cold=CONCEPTS.map(c=>{
@@ -754,17 +738,6 @@ function renderMap(){
     STATE.builds[b.dataset.b]=b.checked;persist();render();});
   const rg=document.getElementById('resumego');
   if(rg) rg.onclick=()=>{const nx=nextConcept();if(nx){CUR=nx.c.id;setTab('read');}};
-  const hpwEl=document.getElementById('hpw');
-  if(hpwEl) hpwEl.addEventListener('input',()=>{
-    STATE.hpw=+hpwEl.value;persist();
-    document.getElementById('hpwv').textContent=hpwEl.value;
-    const el2=document.getElementById('pproj');
-    const words=DATA.stats.wordCount||0, firstH=words/140/60, fullH=firstH*1.8;
-    const seen=CARDS.filter(c=>STATE.cards[c.id]).length, doneFrac=CARDS.length?seen/CARDS.length:0;
-    const remFull=fullH*(1-doneFrac), wk=remFull/(+hpwEl.value);
-    const date=new Date(Date.now()+wk*7*DAY).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
-    el2.innerHTML=`At this pace: full mastery around <b>${date}</b> (~${Math.max(1,Math.ceil(wk))} weeks from today).`;
-  });
 }
 
 /* ---------------- RAPID-FIRE ---------------- */
@@ -773,15 +746,15 @@ function renderDrill(){
   const el=document.getElementById('drillbody');
   if(!rf){
     el.innerHTML=`<div class="empty"><strong>Rapid-fire</strong>
-      45 seconds a question, no reveal until you commit. It is meant to feel bad — that discomfort is the measurement.
+      No reveal until you commit. Untimed — go at your own pace, but grade yourself honestly: guessing the interval doesn't help you.
       <button class="bigbtn" id="start" style="max-width:280px;margin:26px auto 0">Start · 12 questions</button>
       <div style="margin-top:20px"><label style="font-size:13px;color:var(--ink-2)">
         <input type="checkbox" id="critonly" style="accent-color:var(--accent)"> critical concepts only</label></div></div>`;
     document.getElementById('start').onclick=()=>{
       const only=document.getElementById('critonly').checked;
       const pool=CARDS.filter(c=>c.type==='recall'&&(!only||c.priority==='critical'));
-      rf={q:pool.sort(()=>Math.random()-0.5).slice(0,12),i:0,t:45,shown:false,score:[]};
-      tick();render();};
+      rf={q:pool.sort(()=>Math.random()-0.5).slice(0,12),i:0,shown:false,score:[]};
+      render();};
     return;
   }
   if(rf.i>=rf.q.length){
@@ -798,7 +771,7 @@ function renderDrill(){
   }
   const c=rf.q[rf.i];
   el.innerHTML=`<div class="cmeta"><span class="src">Rapid-fire</span><span>${c.concept}</span>
-      <span style="margin-left:auto;color:${rf.t<=10?'var(--bad)':'var(--ink-3)'};font-weight:600">${rf.t}s</span></div>
+      <span style="margin-left:auto">${rf.i+1} / ${rf.q.length}</span></div>
     <div class="card"><div class="cq">${md(c.q)}</div>
     ${rf.shown?`<div class="ca">${md(c.a)}</div>`:`<button class="bigbtn" id="commit">Commit — show answer</button>`}</div>
     ${rf.shown?`<div class="grades" style="grid-template-columns:1fr 1fr">
@@ -806,14 +779,8 @@ function renderDrill(){
       <button data-r="1"><span class="g">Had it</span></button></div>`:''}`;
   const cm=document.getElementById('commit'); if(cm) cm.onclick=()=>{rf.shown=true;render();};
   el.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{
-    rf.score.push(b.dataset.r==='1');rf.i++;rf.shown=false;rf.t=45;render();});
+    rf.score.push(b.dataset.r==='1');rf.i++;rf.shown=false;render();});
   typeset();
-}
-function tick(){
-  setInterval(()=>{
-    if(TAB!=='drill'||!rf||rf.shown||rf.i>=rf.q.length) return;
-    rf.t--; if(rf.t<=0){rf.shown=true;render();} else if(TAB==='drill') renderDrill();
-  },1000);
 }
 
 /* ---------------- render ---------------- */
