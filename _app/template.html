@@ -151,6 +151,9 @@ h3.sec{font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:u
 .blist .bid{font-family:var(--fm);font-size:11px;color:var(--ink-3);flex:none;min-width:32px;padding-top:2px}
 .blist.done>*{opacity:.42}
 .searchbox{width:100%;padding:9px 12px;font-family:var(--fs);font-size:13.5px;background:var(--sunk);border:1px solid var(--rule);border-radius:3px;color:var(--ink);margin-bottom:4px}
+.searchwrap{padding:10px 10px 0}
+.searchwrap .searchbox:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.nomatch{padding:14px 11px;color:var(--ink-3);font-size:12.5px}
 .hit{display:block;width:100%;text-align:left;padding:9px 11px;border-bottom:1px solid var(--rule);font-size:13px}
 .hit:hover{background:var(--sunk)}
 .hit .hid{font-family:var(--fm);font-size:10.5px;color:var(--accent);margin-right:7px}
@@ -173,6 +176,7 @@ mjx-container[display="true"]{margin:14px 0!important}
       <p id="brandsub">Computer Vision · 70 concepts</p>
     </div>
     <nav class="tabs" id="tabs"></nav>
+    <div class="searchwrap"><input class="searchbox" id="search" type="text" placeholder="Search concepts… (id, title, keyword)" autocomplete="off"></div>
     <div id="toc"></div>
     <div class="railfoot">
       <button id="themebtn" title="Toggle theme">◐ theme</button>
@@ -323,7 +327,7 @@ function typeset(){
 
 /* ---------------- routing ---------------- */
 const TABS=[['read','1','Read'],['practice','2','Practice'],['map','3','Map'],['drill','4','Rapid-fire']];
-let TAB='read', CUR=CONCEPTS[0].id;
+let TAB='map', CUR=CONCEPTS[0].id;
 function dueCount(){const n=Date.now();return CARDS.filter(c=>{const s=STATE.cards[c.id];return !s||!s.due||s.due<=n;}).length;}
 function setTab(t){TAB=t;document.querySelectorAll('.surface').forEach(s=>s.classList.remove('on'));
   document.getElementById('s-'+t).classList.add('on');render();window.scrollTo(0,0);}
@@ -346,11 +350,21 @@ function strength(cid){
 const band=r=>r===null||r===0?0:r<0.6?1:r<0.8?2:r<0.93?3:4;
 const bandColor=b=>['var(--r0)','var(--r1)','var(--r2)','var(--r3)','var(--r4)'][b];
 
+let SEARCHQ='';
+function matchesSearch(hay){
+  if(!SEARCHQ) return true;
+  return hay.toLowerCase().includes(SEARCHQ);
+}
 function renderToc(){
   let h='';
+  const q=SEARCHQ;
+  let anyHit=false;
   for(let m=1;m<=6;m++){
-    const cs=CONCEPTS.filter(c=>c.module===m); if(!cs.length) continue;
-    h+=`<div class="mod"><h2>M${m} · ${cs[0].moduleName}</h2>`;
+    const all=CONCEPTS.filter(c=>c.module===m); if(!all.length) continue;
+    const cs=q ? all.filter(c=>matchesSearch(c.id+' '+c.title+' '+(c.body||''))) : all;
+    if(q && !cs.length) continue;
+    anyHit=anyHit||cs.length>0;
+    h+=`<div class="mod"><h2>M${m} · ${all[0].moduleName}</h2>`;
     for(const c of cs){
       const b=band(strength(c.id));
       h+=`<button class="tocitem" data-go="${c.id}" aria-current="${TAB==='read'&&CUR===c.id}">
@@ -359,8 +373,13 @@ function renderToc(){
     }
     h+='</div>';
   }
-  h+=`<div class="mod"><h2>Reference</h2>`+EXTRAS.map((e,i)=>
-    `<button class="tocitem" data-extra="${i}" aria-current="${TAB==='read'&&CUR==='x'+i}"><span class="num">·</span><span>${e.title}</span></button>`).join('')+`</div>`;
+  const extraHits = EXTRAS.map((e,i)=>({e,i})).filter(({e})=>!q||matchesSearch(e.title+' '+(e.body||'')));
+  if(!q || extraHits.length){
+    anyHit=anyHit||extraHits.length>0;
+    h+=`<div class="mod"><h2>Reference</h2>`+extraHits.map(({e,i})=>
+      `<button class="tocitem" data-extra="${i}" aria-current="${TAB==='read'&&CUR==='x'+i}"><span class="num">·</span><span>${e.title}</span></button>`).join('')+`</div>`;
+  }
+  if(q && !anyHit) h=`<div class="nomatch">No concepts match "${q.replace(/</g,'&lt;')}".</div>`;
   const toc=document.getElementById('toc'); toc.innerHTML=h;
   toc.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{CUR=b.dataset.go;setTab('read');});
   toc.querySelectorAll('[data-extra]').forEach(b=>b.onclick=()=>{CUR='x'+b.dataset.extra;setTab('read');});
@@ -610,8 +629,15 @@ document.getElementById('themebtn').onclick=()=>{
   try{localStorage.setItem('cvtheme',dark?'light':'dark');}catch(e){}
 };
 try{const t=localStorage.getItem('cvtheme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+document.getElementById('search').addEventListener('input',e=>{
+  SEARCHQ=e.target.value.trim().toLowerCase();renderToc();
+});
 addEventListener('keydown',e=>{
-  if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT') return;
+  if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT'){
+    if(e.key==='Escape'&&e.target.id==='search'){e.target.value='';SEARCHQ='';renderToc();e.target.blur();}
+    return;
+  }
+  if(e.key==='/'){e.preventDefault();document.getElementById('search').focus();return;}
   const i=['1','2','3','4'].indexOf(e.key);
   if(i>-1){setTab(TABS[i][0]);return;}
   if(TAB==='practice'&&queue[qi]){
@@ -620,6 +646,8 @@ addEventListener('keydown',e=>{
   }
 });
 loadLocal();
+document.querySelectorAll('.surface').forEach(s=>s.classList.remove('on'));
+document.getElementById('s-'+TAB).classList.add('on');
 try{
 document.getElementById('brandsub').textContent=`Computer Vision · ${DATA.stats.concepts} concepts · ${DATA.stats.cards} cards`;
 buildQueue(); render(); connect();
