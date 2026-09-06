@@ -10,6 +10,7 @@
   --accent:#0E6E68; --accent-soft:#D6E8E6; --accent-ink:#0A4F4A; --on-accent:#F7FAF9;
   --warn:#A8622A; --bad:#9E3B34;
   --r0:#C9CEC9; --r1:#8FB7B0; --r2:#3F8F86; --r3:#0E6E68; --r4:#0B4B47;
+  --hl-1:#E8C765; --hl-2:#6FBFB6; --hl-3:#DD8F72; --hl-4:#A995D6;
   --fs:'IBM Plex Sans',system-ui,sans-serif;
   --fr:'IBM Plex Serif',Georgia,serif;
   --fm:'IBM Plex Mono',ui-monospace,Menlo,monospace;
@@ -127,6 +128,25 @@ textarea.free{width:100%;min-height:104px;margin-top:16px;padding:12px 14px;font
 .empty{text-align:center;padding:70px 20px;color:var(--ink-3)}
 .empty strong{display:block;font-family:var(--fs);font-size:19px;color:var(--ink);margin-bottom:8px;font-weight:600}
 
+/* ---------- resume / pacing ---------- */
+.now{border:1px solid var(--rule);border-radius:6px;background:var(--panel);padding:18px 22px;margin-bottom:22px}
+.now h2{margin:0 0 10px;font-family:var(--fm);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.now-row{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.now-headline{font-family:var(--fr);font-size:17px;flex:1;min-width:220px;color:var(--ink)}
+.now-headline b{color:var(--accent-ink)}
+.now .go{font-family:var(--fs);font-size:13px;font-weight:600;padding:9px 16px;border-radius:3px;background:var(--accent);color:var(--on-accent);white-space:nowrap}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:26px}
+@media(max-width:880px){.cols2{grid-template-columns:1fr}}
+.panel{border:1px solid var(--rule);border-radius:6px;background:var(--panel);padding:16px 18px}
+.panel h2{margin:0 0 10px;font-family:var(--fm);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.panel .lead{font-family:var(--fs);font-size:13px;color:var(--ink-2);line-height:1.55;margin:0 0 10px}
+.panel .lead b{color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.pslider{display:block;font-family:var(--fs);font-size:12.5px;color:var(--ink-2);margin:4px 0}
+.pslider input{width:100%;accent-color:var(--accent);margin:8px 0 2px;display:block}
+.pslider b{color:var(--ink)}
+.pproj{font-family:var(--fs);font-size:13px;color:var(--ink);line-height:1.5;margin:8px 0 0}
+.pproj b{color:var(--accent-ink)}
+
 /* ---------- map ---------- */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin-bottom:30px}
 .stat{background:var(--panel);padding:14px 16px}
@@ -154,6 +174,28 @@ h3.sec{font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:u
 .searchwrap{padding:10px 10px 0}
 .searchwrap .searchbox:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .nomatch{padding:14px 11px;color:var(--ink-3);font-size:12.5px}
+
+/* ---------- highlighter ---------- */
+.hl{border-radius:2px;box-decoration-break:clone;-webkit-box-decoration-break:clone;
+  background:color-mix(in srgb,var(--h) 32%,transparent);
+  box-shadow:inset 0 -.42em 0 color-mix(in srgb,var(--h) 18%,transparent);cursor:pointer}
+.hl[data-c="1"]{--h:var(--hl-1)} .hl[data-c="2"]{--h:var(--hl-2)}
+.hl[data-c="3"]{--h:var(--hl-3)} .hl[data-c="4"]{--h:var(--hl-4)}
+#hlbar{position:fixed;z-index:80;display:none;gap:4px;background:var(--panel);border:1px solid var(--rule-2);
+  border-radius:9px;padding:5px;box-shadow:0 10px 30px -12px rgba(0,0,0,.4)}
+#hlbar.on{display:flex}
+.sw{width:25px;height:25px;border-radius:6px;border:1px solid var(--rule-2);cursor:pointer;padding:0;
+  font-family:var(--fm);font-size:10px;font-weight:700;color:#20180a;display:grid;place-items:center}
+.sw[data-c="1"]{background:var(--hl-1)} .sw[data-c="2"]{background:var(--hl-2)}
+.sw[data-c="3"]{background:var(--hl-3)} .sw[data-c="4"]{background:var(--hl-4)}
+.sw[data-c="0"]{background:var(--sunk);color:var(--ink-2)}
+
+/* ---------- focus mode ---------- */
+body.focus #rail{opacity:.08;pointer-events:none;transition:opacity .2s}
+body.focus main{transition:padding .2s}
+body.focus .wrap:not(.wide){max-width:640px}
+body.focus .chead .eyebrow>span:first-child{opacity:.55}
+.focusbtn.on{color:var(--accent-ink);font-weight:600}
 .hit{display:block;width:100%;text-align:left;padding:9px 11px;border-bottom:1px solid var(--rule);font-size:13px}
 .hit:hover{background:var(--sunk)}
 .hit .hid{font-family:var(--fm);font-size:10.5px;color:var(--accent);margin-right:7px}
@@ -180,6 +222,7 @@ mjx-container[display="true"]{margin:14px 0!important}
     <div id="toc"></div>
     <div class="railfoot">
       <button id="themebtn" title="Toggle theme">◐ theme</button>
+      <button id="focusbtn" class="focusbtn" title="Focus mode (F)">◑ focus</button>
       <span id="syncnote">local</span>
     </div>
   </aside>
@@ -189,6 +232,13 @@ mjx-container[display="true"]{margin:14px 0!important}
     <section class="surface" id="s-map"><div class="wrap wide"><div id="mapbody"></div></div></section>
     <section class="surface" id="s-drill"><div class="wrap"><div id="drillbody"></div></div></section>
   </main>
+</div>
+<div id="hlbar" role="toolbar" aria-label="Highlight colour">
+  <button class="sw" data-c="1" title="Remember this (1)">1</button>
+  <button class="sw" data-c="2" title="Understood (2)">2</button>
+  <button class="sw" data-c="3" title="Weak spot — revisit (3)">3</button>
+  <button class="sw" data-c="4" title="Interview material (4)">4</button>
+  <button class="sw" data-c="0" title="Remove highlight (0)">✕</button>
 </div>
 
 <script id="content" type="application/json">__CONTENT__</script>
@@ -236,7 +286,7 @@ function previewIv(st,g){
 }
 
 /* ---------------- state ---------------- */
-let STATE={cards:{},builds:{},v:1}, DB=null, saveTimer=null;
+let STATE={cards:{},builds:{},highlights:{},v:1}, DB=null, saveTimer=null;
 function loadLocal(){try{const r=localStorage.getItem('cvlab');if(r)STATE=Object.assign(STATE,JSON.parse(r));}catch(e){}}
 function persist(){
   try{localStorage.setItem('cvlab',JSON.stringify(STATE));}catch(e){}
@@ -319,11 +369,106 @@ function md(src){
   html=html.replace(/@@M(\d+)@@/g,(_,i)=>store[+i]);
   return html;
 }
-let mjQueued=false;
-function typeset(){
-  if(!window.MathJax?.typesetPromise) { if(!mjQueued){mjQueued=true;setTimeout(()=>{mjQueued=false;typeset();},400);} return; }
-  MathJax.typesetPromise().catch(()=>{});
+function typeset(cb,tries){
+  tries=tries||0;
+  if(!window.MathJax?.typesetPromise){
+    if(tries>15){ if(cb) cb(); return; }
+    setTimeout(()=>typeset(cb,tries+1),400);
+    return;
+  }
+  MathJax.typesetPromise().then(()=>{if(cb)cb();}).catch(()=>{if(cb)cb();});
 }
+
+/* ---------------- highlighter ---------------- */
+/* Offsets are character positions into an element's flattened text, computed
+   the same way both when a selection is captured and when a saved highlight
+   is re-applied, so they only need to agree with each other, not with any
+   external source. Elements already wrapped in a .hl span still contribute
+   their text to the walk (skipped only for re-wrapping), matching how the
+   walk was done when the offset was first recorded. */
+function textNodesOf(el){
+  const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+  const out=[]; let n;
+  while((n=w.nextNode())){ if(n.parentElement.closest('script,style')) continue; out.push(n); }
+  return out;
+}
+function offsetOfRange(el,range){
+  const nodes=textNodesOf(el);
+  const sc=range.startContainer, so=range.startOffset;
+  let acc=0;
+  if(sc.nodeType===3){
+    for(const node of nodes){ if(node===sc) return acc+so; acc+=node.nodeValue.length; }
+    return acc;
+  }
+  const boundary=sc.childNodes?sc.childNodes[so]:null;
+  for(const node of nodes){
+    if(boundary&&(node===boundary||boundary.contains?.(node))) return acc;
+    if(boundary&&(node.compareDocumentPosition(boundary)&Node.DOCUMENT_POSITION_PRECEDING)) return acc;
+    acc+=node.nodeValue.length;
+  }
+  return acc;
+}
+function applyHL(el,start,len,c,k){
+  if(!el||start<0||el.querySelector(`.hl[data-k="${k}"]`)) return;
+  const end=start+len;
+  const nodes=textNodesOf(el);
+  let acc=0; const hits=[];
+  for(const node of nodes){
+    const s=acc,e=acc+node.nodeValue.length; acc=e;
+    if(e<=start||s>=end) continue;
+    hits.push({node,a:Math.max(0,start-s),b:Math.min(node.nodeValue.length,end-s)});
+  }
+  for(let i=hits.length-1;i>=0;i--){
+    const {node,a,b}=hits[i];
+    if(a>=b||node.parentElement.closest('.hl')) continue;
+    const r=document.createRange(); r.setStart(node,a); r.setEnd(node,b);
+    const span=document.createElement('span'); span.className='hl'; span.dataset.c=c; span.dataset.k=k;
+    try{r.surroundContents(span);}catch(e){}
+  }
+}
+function removeHL(k){
+  document.querySelectorAll(`.hl[data-k="${k}"]`).forEach(el=>{
+    const p=el.parentNode; while(el.firstChild) p.insertBefore(el.firstChild,el); p.removeChild(el); p.normalize();
+  });
+}
+function applySavedHighlights(){
+  const el=document.querySelector('#readbody .prose'); if(!el) return;
+  const hs=STATE.highlights[CUR]; if(!hs) return;
+  for(const [k,v] of Object.entries(hs)) applyHL(el,v.start,v.len,v.c,k);
+}
+let SEL=null;
+document.addEventListener('mouseup',()=>setTimeout(()=>{
+  const s=getSelection(); const bar=document.getElementById('hlbar');
+  if(TAB!=='read'||!s||s.isCollapsed||!s.toString().trim()){ bar.classList.remove('on'); return; }
+  const r=s.getRangeAt(0);
+  const container=(r.startContainer.nodeType===1?r.startContainer:r.startContainer.parentElement)?.closest('.prose');
+  if(!container||!document.body.contains(container)){ bar.classList.remove('on'); return; }
+  const b=r.getBoundingClientRect();
+  bar.style.left=Math.max(8,Math.min(innerWidth-190,b.left+b.width/2-90))+'px';
+  bar.style.top=(b.top>62?b.top-44:b.bottom+8)+'px';
+  bar.classList.add('on');
+  const raw=s.toString();
+  const lead=raw.length-raw.trimStart().length;
+  SEL={el:container,text:raw.trim(),start:offsetOfRange(container,r)+lead,len:raw.trim().length};
+},10));
+document.addEventListener('mousedown',e=>{
+  if(!e.target.closest('#hlbar')) document.getElementById('hlbar').classList.remove('on');
+});
+document.getElementById('hlbar').addEventListener('click',e=>{
+  const sw=e.target.closest('.sw'); if(!sw) return;
+  const c=sw.dataset.c;
+  if(c==='0'){
+    const hl=getSelection().anchorNode?.parentElement?.closest('.hl');
+    if(hl){ if(STATE.highlights[CUR]) delete STATE.highlights[CUR][hl.dataset.k]; persist(); removeHL(hl.dataset.k); }
+  } else if(SEL&&SEL.el){
+    const k='h'+Date.now();
+    if(!STATE.highlights[CUR]) STATE.highlights[CUR]={};
+    STATE.highlights[CUR][k]={start:SEL.start,len:SEL.len,c};
+    persist(); applyHL(SEL.el,SEL.start,SEL.len,c,k);
+  }
+  getSelection().removeAllRanges();
+  document.getElementById('hlbar').classList.remove('on');
+});
 
 /* ---------------- routing ---------------- */
 const TABS=[['read','1','Read'],['practice','2','Practice'],['map','3','Map'],['drill','4','Rapid-fire']];
@@ -390,7 +535,7 @@ function renderRead(){
   const el=document.getElementById('readbody');
   if(CUR.startsWith('x')){
     const e=EXTRAS[+CUR.slice(1)];
-    el.innerHTML=`<div class="prose">${md(e.body)}</div>`; typeset(); return;
+    el.innerHTML=`<div class="prose">${md(e.body)}</div>`; typeset(applySavedHighlights); return;
   }
   const c=BYID[CUR], idx=CONCEPTS.findIndex(x=>x.id===CUR);
   const prev=CONCEPTS[idx-1], next=CONCEPTS[idx+1];
@@ -425,7 +570,7 @@ function renderRead(){
     btn.onclick=()=>{ans.hidden=false;btn.remove();typeset();};
   });
   el.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{CUR=b.dataset.p;render();window.scrollTo(0,0);});
-  typeset();
+  typeset(applySavedHighlights);
 }
 
 /* ---------------- PRACTICE ---------------- */
@@ -511,6 +656,47 @@ Reply with: one sentence saying what they got right; one sentence naming precise
 }
 
 /* ---------------- MAP ---------------- */
+function nextConcept(){
+  // weakest critical concept first, then first untouched concept in order, else lowest-strength overall
+  const weak=CONCEPTS.filter(c=>c.priority==='critical'&&band(strength(c.id))<3);
+  if(weak.length) return {c:weak[0],reason:'weakest critical concept'};
+  const untouched=CONCEPTS.filter(c=>!c.cards.some(k=>STATE.cards[k.id]));
+  if(untouched.length) return {c:untouched[0],reason:'not started yet'};
+  const ranked=CONCEPTS.map(c=>({c,s:strength(c.id)})).sort((a,b)=>(a.s??0)-(b.s??0));
+  return ranked.length?{c:ranked[0].c,reason:'lowest retrieval strength'}:null;
+}
+function renderResume(){
+  const seenAny=CARDS.some(c=>STATE.cards[c.id]);
+  const nx=nextConcept();
+  if(!nx) return '';
+  const{c,reason}=nx;
+  const label=seenAny?'Continue':'Start here';
+  const headline=seenAny
+    ? `Continue with <b>${c.id} ${c.title}</b> — ${reason}.`
+    : `Begin with <b>${c.id} ${c.title}</b> — every later module leans on the classical foundations.`;
+  return `<div class="now"><h2>${label}</h2><div class="now-row">
+    <div class="now-headline">${headline}</div>
+    <button class="go" id="resumego">${seenAny?'Resume':'Open'} →</button>
+  </div></div>`;
+}
+function renderPacing(){
+  const words=DATA.stats.wordCount||0;
+  const firstH=words/140/60, fullH=firstH*1.8;
+  const seen=CARDS.filter(c=>STATE.cards[c.id]).length;
+  const doneFrac=CARDS.length?seen/CARDS.length:0;
+  const hpw=STATE.hpw||6;
+  const fmtH=h=>h>=1?Math.round(h)+' h':Math.round(h*60)+' min';
+  const remFull=fullH*(1-doneFrac);
+  const wk=remFull/hpw;
+  const date=new Date(Date.now()+wk*7*DAY).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+  return `<div class="panel"><h2>Pacing</h2>
+    <p class="lead">The whole set of notes is roughly <b>${fmtH(firstH)}</b> of first-pass reading at 140&nbsp;wpm, about <b>${fmtH(fullH)}</b> including spaced practice.</p>
+    <label class="pslider">I can study
+      <input type="range" id="hpw" min="2" max="20" step="1" value="${hpw}">
+      <b><span id="hpwv">${hpw}</span> h / week</b></label>
+    <p class="pproj" id="pproj">At this pace: full mastery around <b>${date}</b> (~${Math.max(1,Math.ceil(wk))} weeks from today).</p>
+  </div>`;
+}
 function renderMap(){
   const n=Date.now();
   const seen=CARDS.filter(c=>STATE.cards[c.id]).length;
@@ -518,7 +704,11 @@ function renderMap(){
   const critWeak=CONCEPTS.filter(c=>c.priority==='critical'&&band(strength(c.id))<3).length;
   const builds=CONCEPTS.filter(c=>c.build);
   const bdone=builds.filter(c=>STATE.builds[c.id]).length;
-  let h=`<div class="stats">
+  let h=renderResume();
+  h+=`<div class="cols2">${renderPacing()}<div class="panel"><h2>Reading guide</h2>
+    <p class="lead" style="margin-bottom:0">First pass — read a concept linearly, predict the Pause before revealing.
+    Second pass — work every derivation on paper. Before an interview — the Top-1% distinction call-outs and the Build tasks.</p></div></div>`;
+  h+=`<div class="stats">
     <div class="stat"><div class="v">${dueCount()}</div><div class="l">due now</div></div>
     <div class="stat"><div class="v">${seen}<span style="font-size:15px;color:var(--ink-3)">/${CARDS.length}</span></div><div class="l">cards started</div></div>
     <div class="stat"><div class="v">${strong}<span style="font-size:15px;color:var(--ink-3)">/${CONCEPTS.length}</span></div><div class="l">concepts strong</div></div>
@@ -562,6 +752,19 @@ function renderMap(){
   el.querySelectorAll('.cell').forEach(b=>b.onclick=()=>{CUR=b.dataset.go;setTab('read');});
   el.querySelectorAll('[data-b]').forEach(b=>b.onchange=()=>{
     STATE.builds[b.dataset.b]=b.checked;persist();render();});
+  const rg=document.getElementById('resumego');
+  if(rg) rg.onclick=()=>{const nx=nextConcept();if(nx){CUR=nx.c.id;setTab('read');}};
+  const hpwEl=document.getElementById('hpw');
+  if(hpwEl) hpwEl.addEventListener('input',()=>{
+    STATE.hpw=+hpwEl.value;persist();
+    document.getElementById('hpwv').textContent=hpwEl.value;
+    const el2=document.getElementById('pproj');
+    const words=DATA.stats.wordCount||0, firstH=words/140/60, fullH=firstH*1.8;
+    const seen=CARDS.filter(c=>STATE.cards[c.id]).length, doneFrac=CARDS.length?seen/CARDS.length:0;
+    const remFull=fullH*(1-doneFrac), wk=remFull/(+hpwEl.value);
+    const date=new Date(Date.now()+wk*7*DAY).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+    el2.innerHTML=`At this pace: full mastery around <b>${date}</b> (~${Math.max(1,Math.ceil(wk))} weeks from today).`;
+  });
 }
 
 /* ---------------- RAPID-FIRE ---------------- */
@@ -632,11 +835,24 @@ try{const t=localStorage.getItem('cvtheme');if(t)document.documentElement.setAtt
 document.getElementById('search').addEventListener('input',e=>{
   SEARCHQ=e.target.value.trim().toLowerCase();renderToc();
 });
+function toggleFocus(){
+  document.body.classList.toggle('focus');
+  document.getElementById('focusbtn').classList.toggle('on',document.body.classList.contains('focus'));
+}
+document.getElementById('focusbtn').onclick=toggleFocus;
 addEventListener('keydown',e=>{
   if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT'){
     if(e.key==='Escape'&&e.target.id==='search'){e.target.value='';SEARCHQ='';renderToc();e.target.blur();}
     return;
   }
+  const bar=document.getElementById('hlbar');
+  if(bar.classList.contains('on')&&SEL&&'01234'.includes(e.key)){
+    e.preventDefault();
+    const sw=bar.querySelector(`[data-c="${e.key}"]`); if(sw) sw.click();
+    return;
+  }
+  if(e.key==='Escape'){ document.body.classList.remove('focus'); document.getElementById('focusbtn').classList.remove('on'); bar.classList.remove('on'); return; }
+  if(e.key.toLowerCase()==='f'){ toggleFocus(); return; }
   if(e.key==='/'){e.preventDefault();document.getElementById('search').focus();return;}
   const i=['1','2','3','4'].indexOf(e.key);
   if(i>-1){setTab(TABS[i][0]);return;}
