@@ -105,6 +105,13 @@ main{min-width:0;padding:0 0 90px}
 .veil .va{margin-top:12px;padding-top:12px;border-top:1px dashed var(--rule-2)}
 .veil .va[hidden]{display:none}
 .veil .reveal{font-family:var(--fm);font-size:11px;letter-spacing:.05em;color:var(--accent-ink);margin-top:10px;text-decoration:underline;text-underline-offset:3px}
+.notesbox{margin-top:30px;padding-top:20px;border-top:1px dashed var(--rule-2)}
+.notesh{display:flex;align-items:center;gap:10px;font-family:var(--fm);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.notesaved{font-family:var(--fs);font-size:11px;letter-spacing:0;text-transform:none;color:var(--accent-ink)}
+.notesarea{width:100%;min-height:90px;padding:12px 14px;font-family:var(--fs);font-size:14px;line-height:1.55;
+  background:var(--sunk);border:1px solid var(--rule);border-radius:4px;color:var(--ink);resize:vertical}
+.notesarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.tocitem .notedot{font-size:10px;color:var(--accent-ink)}
 .pager{display:flex;justify-content:space-between;gap:12px;margin:40px 0 0;padding-top:18px;border-top:1px solid var(--rule)}
 .pager button{font-size:13px;color:var(--ink-2);padding:7px 12px;border:1px solid var(--rule);border-radius:3px;background:var(--panel);max-width:46%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pager button:hover{border-color:var(--accent);color:var(--ink)}
@@ -281,7 +288,7 @@ function previewIv(st,g){
 }
 
 /* ---------------- state ---------------- */
-let STATE={cards:{},builds:{},highlights:{},v:1}, DB=null, saveTimer=null;
+let STATE={cards:{},builds:{},highlights:{},notes:{},v:1}, DB=null, saveTimer=null;
 function loadLocal(){try{const r=localStorage.getItem('cvlab');if(r)STATE=Object.assign(STATE,JSON.parse(r));}catch(e){}}
 function persist(){
   try{localStorage.setItem('cvlab',JSON.stringify(STATE));}catch(e){}
@@ -511,7 +518,9 @@ function renderToc(){
       h+=`<button class="tocitem" data-go="${c.id}" aria-current="${TAB==='read'&&CUR===c.id}"
           title="${s===null?'Untouched':Math.round(s*100)+'% retrievability'}">
         <span class="num">${c.id}</span><span>${c.title}</span>
-        <span class="stat">${pctTxt?`<span class="pct" style="color:${bandColor(b)}">${pctTxt}</span>`:''}
+        <span class="stat">
+        <span class="notedot" title="Has your notes" style="display:${STATE.notes[c.id]?'inline-block':'none'}">✎</span>
+        ${pctTxt?`<span class="pct" style="color:${bandColor(b)}">${pctTxt}</span>`:''}
         <span class="dot" style="background:${bandColor(b)}"></span></span></button>`;
     }
     h+='</div>';
@@ -528,12 +537,40 @@ function renderToc(){
   toc.querySelectorAll('[data-extra]').forEach(b=>b.onclick=()=>{CUR='x'+b.dataset.extra;setTab('read');});
 }
 
+/* ---------------- my notes (per concept, free text) ---------------- */
+let notesSaveTimer=null;
+function notesBoxHTML(id){
+  const txt=STATE.notes[id]||'';
+  return `<div class="notesbox">
+    <div class="notesh"><span>✎ My notes</span><span class="notesaved" id="notesaved"></span></div>
+    <textarea class="notesarea" id="notesarea" placeholder="Anything you want here — your own explanation, a link, a gotcha you hit, something you looked up elsewhere. Only you see this.">${txt.replace(/</g,'&lt;')}</textarea>
+  </div>`;
+}
+function wireNotesBox(){
+  const ta=document.getElementById('notesarea'); if(!ta) return;
+  const id=CUR;
+  ta.addEventListener('input',()=>{
+    if(ta.value.trim()) STATE.notes[id]=ta.value; else delete STATE.notes[id];
+    const dot=document.querySelector(`.tocitem[data-go="${id}"] .notedot`);
+    if(dot) dot.style.display=ta.value.trim()?'inline-block':'none';
+    clearTimeout(notesSaveTimer);
+    const saved=document.getElementById('notesaved');
+    if(saved) saved.textContent='saving…';
+    notesSaveTimer=setTimeout(()=>{
+      persist();
+      if(saved) saved.textContent='saved';
+      setTimeout(()=>{ if(saved) saved.textContent=''; },1200);
+    },500);
+  });
+}
+
 /* ---------------- READ ---------------- */
 function renderRead(){
   const el=document.getElementById('readbody');
   if(CUR.startsWith('x')){
     const e=EXTRAS[+CUR.slice(1)];
-    el.innerHTML=`<div class="prose">${md(e.body)}</div>`; typeset(applySavedHighlights); return;
+    el.innerHTML=`<div class="prose">${md(e.body)}</div>${notesBoxHTML(CUR)}`;
+    wireNotesBox(); typeset(applySavedHighlights); return;
   }
   const c=BYID[CUR], idx=CONCEPTS.findIndex(x=>x.id===CUR);
   const prev=CONCEPTS[idx-1], next=CONCEPTS[idx+1];
@@ -560,6 +597,7 @@ function renderRead(){
         <span style="margin-left:auto">${c.cards.length} card${c.cards.length===1?'':'s'}</span></div>
       <h2>${c.id} &nbsp;${c.title}</h2></div>
     <div class="prose">${html}</div>
+    ${notesBoxHTML(CUR)}
     <div class="pager">
       ${prev?`<button data-p="${prev.id}">← ${prev.id} ${prev.title}</button>`:'<span></span>'}
       ${next?`<button data-p="${next.id}">${next.id} ${next.title} →</button>`:'<span></span>'}
@@ -570,6 +608,7 @@ function renderRead(){
     btn.onclick=()=>{ans.hidden=false;btn.remove();typeset();};
   });
   el.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{CUR=b.dataset.p;render();window.scrollTo(0,0);});
+  wireNotesBox();
   typeset(applySavedHighlights);
 }
 
